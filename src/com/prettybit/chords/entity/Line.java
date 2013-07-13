@@ -8,32 +8,33 @@ import android.graphics.Rect;
 /**
  * @author Pavel Mikhalchuk
  */
-public class Chor extends Item {
+public class Line extends Item {
 
-    private String c;
-    private Rect cRect;
+    private String line;
+    private Rect lRect;
 
     private Paint text = new Paint();
     private Paint backGround = new Paint();
 
-    public Chor(String c) {
-        this.c = c;
+    public Line(String line) {
+        this.line = line;
         text.setColor(Color.BLACK);
         backGround.setStyle(Paint.Style.STROKE);
-        backGround.setColor(Color.RED);
+        backGround.setColor(Color.GREEN);
     }
 
     @Override
     public void onMeasure(int size) {
-        setWidth(size);
         setHeight(size);
 
         text.setTextSize(height());
 
         Rect bounds = new Rect();
-        text.getTextBounds(c, 0, c.length(), bounds);
+        text.getTextBounds(line, 0, line.length(), bounds);
 
-        cRect = new Rect((width() - bounds.width()) / 2, (height() - bounds.height()) / 2, bounds.width(), bounds.height());
+        setWidth((int) text.measureText(line));
+
+        lRect = new Rect((width() - bounds.width()) / 2, (height() - bounds.height()) / 2, bounds.width(), bounds.height());
     }
 
     @Override
@@ -48,7 +49,7 @@ public class Chor extends Item {
     }
 
     private void drawText(Canvas canvas, Caret caret) {
-        canvas.drawText(c, caret.x() + cRect.left, caret.y() + cRect.top + (height() - text.getFontMetrics().descent), text);
+        canvas.drawText(line, caret.x() + lRect.left, caret.y() + lRect.top + (height() - text.getFontMetrics().descent), text);
     }
 
 }

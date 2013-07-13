@@ -15,4 +15,16 @@ public class Items extends LinkedList<Item> {
         }
     }
 
+    public void drawln(Canvas canvas, Caret caret) {
+        for (Item item : this) {
+            item.drawln(canvas, caret);
+        }
+    }
+
+    public void measure(int size) {
+        for (Item item : this) {
+            item.measure(size);
+        }
+    }
+
 }

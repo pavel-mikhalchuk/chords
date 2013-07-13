@@ -1,18 +1,39 @@
 package com.prettybit.chords.entity;
 
-import android.content.Context;
-import android.widget.LinearLayout;
-
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+import android.graphics.Canvas;
 
 /**
  * @author Pavel Mikhalchuk
  */
 public class SongPart {
 
+    private int screenWidth;
+    private int screenHeight;
+
+    private int size;
+
     private Items items = new Items();
 
+    public SongPart(int size) {
+        this.size = size;
+    }
+
+    public void init(int screenWidth, int screenHeight) {
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
+        items.measure(size);
+    }
+
+    public int screenWidth() {
+        return screenWidth;
+    }
+
+    public int screenHeight() {
+        return screenHeight;
+    }
+
     public void addItem(Item item) {
+        item.setPart(this);
         items.add(item);
     }
 
@@ -20,25 +41,16 @@ public class SongPart {
         return items;
     }
 
-    public View toView(Context context) {
-        return new View(context);
+    public int size() {
+        return size;
     }
 
-    public class View extends LinearLayout {
+    public void setSize(int size) {
+        this.size = size;
+    }
 
-        public View(Context context) {
-            super(context);
-            setOrientation(HORIZONTAL);
-            setLayoutParams(new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
-            for (Item item : items) { addView(item.toView(context)); }
-        }
-
-        public void setSize(int size) {
-            for (int i = 0; i < getChildCount(); i++) {
-                ((ItemView) getChildAt(i)).setSize(size);
-            }
-        }
-
+    public void draw(Canvas canvas) {
+        items.draw(canvas, new Caret(size));
     }
 
 }

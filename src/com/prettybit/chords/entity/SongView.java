@@ -4,32 +4,47 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.view.View;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * @author Pavel Mikhalchuk
  */
 public class SongView extends View {
 
-    private SongPart part;
+    private float scale = 1;
+    private List<SongPart> parts = new LinkedList<SongPart>();
 
-    private int size = 0;
-
-    public SongView(Context context, SongPart part) {
+    public SongView(Context context) {
         super(context);
-        this.part = part;
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec));
+        int screenWidth = MeasureSpec.getSize(widthMeasureSpec);
+        int screenHeight = MeasureSpec.getSize(heightMeasureSpec);
+
+        for (SongPart part : parts) {
+            part.init(screenWidth, screenHeight);
+        }
+        setMeasuredDimension(screenWidth, screenHeight);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        part.getItems().draw(canvas, new Caret(size));
+        canvas.scale(scale, scale);
+        for (SongPart part : parts) {
+            part.draw(canvas);
+            canvas.translate(0, part.size() + 20);
+        }
     }
 
-    public void setSize(int size) {
-        this.size = size;
+    public void addParts(List<SongPart> parts) {
+        this.parts.addAll(parts);
+    }
+
+    public void setScale(float scale) {
+        this.scale *= scale;
     }
 
 }

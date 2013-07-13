@@ -17,13 +17,13 @@ public class Caret {
     }
 
     public Caret(int x, int y, int size, Caret parent) {
-        this.x = start = x;
+        this.start = this.x = x;
         this.y = y;
         this.size = size;
         this.parent = parent;
     }
 
-    public int getX() {
+    public int x() {
         return x;
     }
 
@@ -31,7 +31,7 @@ public class Caret {
         this.x = x;
     }
 
-    public int getY() {
+    public int y() {
         return y;
     }
 
@@ -44,7 +44,7 @@ public class Caret {
         setY(y);
     }
 
-    public int getSize() {
+    public int size() {
         return size;
     }
 
@@ -52,12 +52,12 @@ public class Caret {
         this.size = size;
     }
 
-    public int getWidth() {
+    public int width() {
         return x - start;
     }
 
-    public Caret split(int rows) {
-        return new Caret(x, y, size / rows, this);
+    public Caret split(int rowSize) {
+        return new Caret(x, y, rowSize, this);
     }
 
     public void move(int distance) {

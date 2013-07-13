@@ -7,17 +7,19 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.LinearLayout;
+import com.prettybit.chords.entity.Bar;
 import com.prettybit.chords.entity.Chor;
-import com.prettybit.chords.entity.Column;
+import com.prettybit.chords.entity.Line;
+import com.prettybit.chords.entity.Repeat;
 import com.prettybit.chords.entity.SongPart;
 import com.prettybit.chords.entity.SongView;
-import com.prettybit.chords.entity.Span;
+import com.prettybit.chords.entity.Title;
+import com.prettybit.chords.entity.Verse;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class ChordsStage extends Activity {
-
-    private int size = 80;
-
-    private SongPart.View partView;
 
     private SongView songView;
 
@@ -26,101 +28,50 @@ public class ChordsStage extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chords_stage);
 
-        SongPart part = new SongPart();
-
-        Column column = new Column();
-
-        Span span = new Span();
-        span.addItem(new Chor("D"));
-        span.addItem(new Chor("|"));
-        span.addItem(new Chor("C"));
-        span.addItem(new Chor("|"));
-        span.addItem(new Chor("G"));
-        span.addItem(new Chor("|"));
-        span.addItem(new Chor("A"));
-        span.addItem(new Chor("C"));
-//        span.addItem(new Repeat());
-//        span.addItem(new Repeat());
-//        span.addItem(new Repeat());
-//        span.addItem(new Repeat());
-//        span.addItem(new Repeat());
-
-        column.addItem(span);
-        column.addItem(span);
-        column.addItem(span);
-
-        span = new Span();
-        span.addItem(new Chor("D"));
-        span.addItem(new Chor("|"));
-        span.addItem(new Chor("C"));
-        span.addItem(new Chor("|"));
-        span.addItem(new Chor("G"));
-        span.addItem(new Chor("|"));
-        span.addItem(new Chor("A"));
-        span.addItem(new Chor("F"));
-//        span.addItem(new Repeat());
-//        span.addItem(new Repeat());
-//        span.addItem(new Repeat());
-
-        column.addItem(span);
-
-        Span sss = new Span();
-
-//        sss.addItem(new Repeat());
-//        sss.addItem(new Repeat());
-        sss.addItem(column);
-//        sss.addItem(new Repeat());
-
-        Column ccc = new Column();
-        ccc.addItem(sss);
-
-
-        column = new Column();
-
-        span = new Span();
-        span.addItem(new Chor("D"));
-        span.addItem(new Chor("|"));
-        span.addItem(new Chor("C"));
-        span.addItem(new Chor("|"));
-        span.addItem(new Chor("G"));
-        span.addItem(new Chor("|"));
-        span.addItem(new Chor("A"));
-        span.addItem(new Chor("C"));
-
-        column.addItem(span);
-        column.addItem(span);
-        column.addItem(span);
-
-        span = new Span();
-        span.addItem(new Chor("D"));
-        span.addItem(new Chor("|"));
-        span.addItem(new Chor("C"));
-        span.addItem(new Chor("|"));
-        span.addItem(new Chor("G"));
-        span.addItem(new Chor("|"));
-        span.addItem(new Chor("A"));
-        span.addItem(new Chor("F"));
-
-        column.addItem(span);
-
-        sss = new Span();
-
-        sss.addItem(column);
-//        sss.addItem(new Repeat());
-
-        ccc.addItem(sss);
-
-        part.addItem(ccc);
-
         LinearLayout stage = (LinearLayout) findViewById(R.id.chords_stage);
 
-//        partView = part.toView(this);
-//        partView.setSize(size);
+        songView = new SongView(this);
+        songView.addParts(getParts());
 
-        songView = new SongView(this, part);
-        songView.setSize(size);
         stage.addView(songView);
         stage.setOnTouchListener(new TouchListener(this));
+    }
+
+    private List<SongPart> getParts() {
+        LinkedList<SongPart> parts = new LinkedList<SongPart>();
+
+        SongPart p = new SongPart(20);
+        p.addItem(new Title("Shadows of the Night"));
+
+        parts.add(p);
+
+        p = new SongPart(20);
+        p.addItem(new Line("Intro: Voc = "));
+        p.addItem(new Chor("E"));
+        p.addItem(new Bar());
+        p.addItem(new Chor("A"));
+        p.addItem(new Repeat());
+
+        parts.add(p);
+
+        p = new SongPart(20);
+        p.addItem(new Verse(1));
+        p.addItem(new Chor("E"));
+        p.addItem(new Bar());
+        p.addItem(new Chor("A"));
+        p.addItem(new Repeat());
+        p.addItem(new Chor("C"));
+        p.addItem(new Bar());
+        p.addItem(new Chor("B"));
+        p.addItem(new Bar());
+        p.addItem(new Chor("F"));
+        p.addItem(new Bar());
+        p.addItem(new Chor("G"));
+        p.addItem(new Bar());
+
+        parts.add(p);
+
+        return parts;
     }
 
     private class TouchListener implements View.OnTouchListener {
@@ -140,11 +91,8 @@ public class ChordsStage extends Activity {
 
             @Override
             public boolean onScale(ScaleGestureDetector detector) {
-                int newSize = Math.max((int) (detector.getScaleFactor() * size), 15);
-                if (newSize != size) {
-                    songView.setSize(size = newSize);
-                    songView.invalidate();
-                }
+                songView.setScale(detector.getScaleFactor());
+                songView.invalidate();
                 return true;
             }
 

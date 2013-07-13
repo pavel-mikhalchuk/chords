@@ -7,37 +7,30 @@ import android.graphics.Paint;
 /**
  * @author Pavel Mikhalchuk
  */
-public class Span extends Item {
+public class Bar extends Item {
 
-    private Items items = new Items();
-
+    private Paint brush = new Paint();
     private Paint backGround = new Paint();
 
-    public Span() {
+    public Bar() {
+        brush.setStyle(Paint.Style.FILL);
+        brush.setColor(Color.BLACK);
         backGround.setStyle(Paint.Style.STROKE);
-        backGround.setColor(Color.BLUE);
-    }
-
-    public void addItem(Item item) {
-        items.add(item);
+        backGround.setColor(Color.BLACK);
     }
 
     @Override
     public void onMeasure(int size) {
-        for (Item item : items) {
-            item.measure(size);
-            widthPlus(item.width());
-            setHeight(height() != 0 ? Math.min(item.height(), height()) : item.height());
-        }
-
-        items.measure(height());
+        setWidth(size * 3 / 40);
+        setHeight(size);
     }
 
     @Override
     public void draw(Canvas canvas, Caret caret) {
         canvas.drawRect(caret.x(), caret.y(), caret.x() + width(), caret.y() + height(), backGround);
 
-        items.draw(canvas, caret);
+        canvas.drawRect(caret.x(), caret.y(), caret.x() + width(), caret.y() + height(), brush);
+        caret.move(width());
     }
 
 }
