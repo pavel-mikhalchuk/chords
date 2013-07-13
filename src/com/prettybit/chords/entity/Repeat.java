@@ -10,9 +10,8 @@ import android.graphics.Paint;
 public class Repeat extends Item {
 
     float scale = 1;
-    float middleLine = 0;
 
-    private Paint brush = new Paint();
+    private Paint brush = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint backGround = new Paint();
 
     public Repeat() {
@@ -24,36 +23,34 @@ public class Repeat extends Item {
 
     @Override
     public void onMeasure(int size) {
-        setWidth(size * 2 / 5);
+        setWidth(8);
         setHeight(size);
-        scale = size / 80f;
-        middleLine = size / 17;
     }
 
     @Override
     public void draw(Canvas canvas, Caret caret) {
-        drawBackGround(canvas, caret);
-        drawThickLine(canvas, caret);
-        drawThinLine(canvas, caret);
+        canvas.save();
+//        drawBackGround(canvas, caret);
         drawCircles(canvas, caret);
-        caret.move(width());
+        drawLines(canvas, caret);
+        caret.move(width() + 5);
+        canvas.restore();
     }
 
     private void drawBackGround(Canvas canvas, Caret caret) {
         canvas.drawRect(caret.x(), caret.y(), caret.x() + width(), caret.y() + height(), backGround);
     }
 
-    private void drawThickLine(Canvas canvas, Caret caret) {
-        canvas.drawRect(caret.x() + width() / 2, caret.y(), caret.x() + width() / 2 + 1 * scale, caret.y() + height(), brush);
-    }
-
-    private void drawThinLine(Canvas canvas, Caret caret) {
-        canvas.drawRect(caret.x() + width() / 2 + middleLine, caret.y(), caret.x() + width() / 2 + middleLine + 1 * 6 * scale, caret.y() + height(), brush);
-    }
-
     private void drawCircles(Canvas canvas, Caret caret) {
-        canvas.drawCircle(caret.x() + width() / 2 - middleLine - 3 * scale, caret.y() + height() / 2 - middleLine, 3.66f * scale, brush);
-        canvas.drawCircle(caret.x() + width() / 2 - middleLine - 3 * scale, caret.y() + height() / 2 + middleLine, 3.66f * scale, brush);
+        canvas.drawCircle(caret.x() + 2, caret.y() + height() / 2 - 2, 1, brush);
+        canvas.drawCircle(caret.x() + 2, caret.y() + height() / 2 + 2, 1, brush);
+        canvas.translate(5, 0);
+    }
+
+    private void drawLines(Canvas canvas, Caret caret) {
+        canvas.drawLine(caret.x(), caret.y(), caret.x(), caret.y() + height(), brush);
+        canvas.translate(2, 0);
+        canvas.drawLine(caret.x(), caret.y(), caret.x(), caret.y() + height(), brush);
     }
 
 }

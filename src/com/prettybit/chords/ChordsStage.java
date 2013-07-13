@@ -40,29 +40,29 @@ public class ChordsStage extends Activity {
     private List<SongPart> getParts() {
         LinkedList<SongPart> parts = new LinkedList<SongPart>();
 
-        SongPart p = new SongPart(20);
+        SongPart p = new SongPart(17);
         p.addItem(new Title("Shadows of the Night"));
 
         parts.add(p);
 
-        p = new SongPart(20);
+        p = new SongPart(40);
         p.addItem(new Line("Intro: Voc = "));
-        p.addItem(new Chor("E"));
+        p.addItem(new Chor("E", true));
         p.addItem(new Bar());
-        p.addItem(new Chor("A"));
+        p.addItem(new Chor("A", true));
         p.addItem(new Repeat());
 
         parts.add(p);
 
-        p = new SongPart(20);
+        p = new SongPart(40);
         p.addItem(new Verse(1));
-        p.addItem(new Chor("E"));
+        p.addItem(new Chor("E", true));
         p.addItem(new Bar());
-        p.addItem(new Chor("A"));
+        p.addItem(new Chor("A", true));
         p.addItem(new Repeat());
         p.addItem(new Chor("C"));
         p.addItem(new Bar());
-        p.addItem(new Chor("B"));
+        p.addItem(new Chor("B", true));
         p.addItem(new Bar());
         p.addItem(new Chor("F"));
         p.addItem(new Bar());

@@ -9,7 +9,7 @@ import android.graphics.Paint;
  */
 public class Bar extends Item {
 
-    private Paint brush = new Paint();
+    private Paint brush = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint backGround = new Paint();
 
     public Bar() {
@@ -21,15 +21,15 @@ public class Bar extends Item {
 
     @Override
     public void onMeasure(int size) {
-        setWidth(size * 3 / 40);
+        setWidth(5);
         setHeight(size);
     }
 
     @Override
     public void draw(Canvas canvas, Caret caret) {
-        canvas.drawRect(caret.x(), caret.y(), caret.x() + width(), caret.y() + height(), backGround);
+//        canvas.drawRect(caret.x(), caret.y(), caret.x() + width(), caret.y() + height(), backGround);
 
-        canvas.drawRect(caret.x(), caret.y(), caret.x() + width(), caret.y() + height(), brush);
+        canvas.drawLine(caret.x(), caret.y(), caret.x(), caret.y() + height(), brush);
         caret.move(width());
     }
 

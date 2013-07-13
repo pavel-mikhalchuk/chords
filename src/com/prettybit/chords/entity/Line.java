@@ -13,7 +13,7 @@ public class Line extends Item {
     private String line;
     private Rect lRect;
 
-    private Paint text = new Paint();
+    private Paint text = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint backGround = new Paint();
 
     public Line(String line) {
