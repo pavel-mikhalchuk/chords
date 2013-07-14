@@ -13,6 +13,7 @@ import com.prettybit.chords.entity.Line;
 import com.prettybit.chords.entity.Repeat;
 import com.prettybit.chords.entity.SongPart;
 import com.prettybit.chords.entity.SongView;
+import com.prettybit.chords.entity.Tab;
 import com.prettybit.chords.entity.Title;
 import com.prettybit.chords.entity.Verse;
 
@@ -65,8 +66,9 @@ public class ChordsStage extends Activity {
         p.addItem(new Chor("B", true));
         p.addItem(new Bar());
         p.addItem(new Chor("F"));
-        p.addItem(new Bar());
         p.addItem(new Chor("G"));
+        p.addItem(new Bar());
+        p.addItem(new Tab());
         p.addItem(new Bar());
 
         parts.add(p);

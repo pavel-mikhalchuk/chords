@@ -29,6 +29,8 @@ public class Repeat extends Item {
 
     @Override
     public void draw(Canvas canvas, Caret caret) {
+        caret.move(5);
+
         canvas.save();
 //        drawBackGround(canvas, caret);
         drawCircles(canvas, caret);

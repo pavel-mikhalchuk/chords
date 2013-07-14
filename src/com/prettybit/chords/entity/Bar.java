@@ -21,12 +21,14 @@ public class Bar extends Item {
 
     @Override
     public void onMeasure(int size) {
-        setWidth(5);
+        setWidth(7);
         setHeight(size);
     }
 
     @Override
     public void draw(Canvas canvas, Caret caret) {
+        caret.move(width());
+
 //        canvas.drawRect(caret.x(), caret.y(), caret.x() + width(), caret.y() + height(), backGround);
 
         canvas.drawLine(caret.x(), caret.y(), caret.x(), caret.y() + height(), brush);

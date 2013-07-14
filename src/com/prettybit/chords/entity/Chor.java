@@ -37,10 +37,11 @@ public class Chor extends Item {
 
     @Override
     public void onMeasure(int size) {
-        setWidth(size);
         setHeight(size);
 
         text.setTextSize(height());
+
+        setWidth((int) text.measureText(c));
 
         Rect bounds = new Rect();
         text.getTextBounds(c, 0, c.length(), bounds);
@@ -52,7 +53,7 @@ public class Chor extends Item {
     public void draw(Canvas canvas, Caret caret) {
 //        drawBackGround(canvas, caret);
         drawText(canvas, caret);
-        caret.move(width() + (flat ? 10 : 5));
+        caret.move(width() + (flat ? 10 : 0));
     }
 
     private void drawBackGround(Canvas canvas, Caret caret) {
@@ -70,7 +71,7 @@ public class Chor extends Item {
         canvas.save();
 
         text.setTextSize(20);
-        canvas.translate(caret.x() + 30, caret.y() + 15);
+        canvas.translate(caret.x() + 20, caret.y() + 15);
 
         canvas.drawText(flat, 0, 0, text);
 
