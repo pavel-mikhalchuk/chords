@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 
 import java.math.BigInteger;
@@ -19,6 +20,8 @@ public class Chor extends Item {
 
     private Paint text = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint backGround = new Paint();
+
+    private RectF place;
 
     public Chor(String c) {
         this(c, false);
@@ -51,17 +54,20 @@ public class Chor extends Item {
 
     @Override
     public void draw(Canvas canvas, Caret caret) {
-//        drawBackGround(canvas, caret);
+        drawBackGround(canvas, caret);
         drawText(canvas, caret);
         caret.move(width() + (flat ? 10 : 0));
     }
 
     private void drawBackGround(Canvas canvas, Caret caret) {
+        place = new RectF(caret.x(), caret.y(), caret.x() + width(), caret.y() + height());
+
         canvas.drawRect(caret.x(), caret.y(), caret.x() + width(), caret.y() + height(), backGround);
     }
 
     private void drawText(Canvas canvas, Caret caret) {
-        canvas.drawText(c, caret.x() + cRect.left, caret.y() + cRect.top + (height() - text.getFontMetrics().descent), text);
+//        canvas.drawText(c, caret.x() + cRect.left, caret.y() + cRect.top + (height() - text.getFontMetrics().descent), text);
+        canvas.drawText(c, caret.x(), caret.y() + cRect.top + (height() - text.getFontMetrics().descent), text);
         if (flat) drawFlatSymbol(canvas, caret);
     }
 
@@ -78,6 +84,23 @@ public class Chor extends Item {
         text.setTextSize(height());
 
         canvas.restore();
+    }
+
+    @Override
+    protected boolean contains(int x, int y) {
+        return place.contains(x, y);
+    }
+
+    @Override
+    protected void select() {
+        backGround.setStyle(Paint.Style.FILL);
+        text.setColor(Color.WHITE);
+    }
+
+    @Override
+    protected void deselect() {
+        backGround.setStyle(Paint.Style.STROKE);
+        text.setColor(Color.BLACK);
     }
 
 }

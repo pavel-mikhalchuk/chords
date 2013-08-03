@@ -1,14 +1,12 @@
 package com.prettybit.chords;
 
 import android.app.Activity;
-import android.content.Context;
+import android.graphics.Point;
 import android.os.Bundle;
-import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
-import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import com.prettybit.chords.entity.Bar;
 import com.prettybit.chords.entity.Chor;
+import com.prettybit.chords.entity.Keyboard;
 import com.prettybit.chords.entity.Line;
 import com.prettybit.chords.entity.Repeat;
 import com.prettybit.chords.entity.SongPart;
@@ -20,6 +18,9 @@ import com.prettybit.chords.entity.Verse;
 import java.util.LinkedList;
 import java.util.List;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+
 public class ChordsStage extends Activity {
 
     private SongView songView;
@@ -29,13 +30,29 @@ public class ChordsStage extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chords_stage);
 
-        LinearLayout stage = (LinearLayout) findViewById(R.id.chords_stage);
+        RelativeLayout stage = (RelativeLayout) findViewById(R.id.chords_stage);
 
         songView = new SongView(this);
-        songView.addParts(getParts());
 
-        stage.addView(songView);
-        stage.setOnTouchListener(new TouchListener(this));
+        Point display = new Point();
+        getWindowManager().getDefaultDisplay().getSize(display);
+
+        SongPart part = new SongPart(20);
+        part.addItem(new Chor("Y"));
+        part.init(display.x, display.y);
+        songView.addPart(part);
+
+//        songView.addParts(getParts());
+
+        RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
+        p.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+
+        stage.addView(songView, p);
+
+        p = new RelativeLayout.LayoutParams(MATCH_PARENT, 100);
+        p.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+
+        stage.addView(new Keyboard(this, songView), p);
     }
 
     private List<SongPart> getParts() {
@@ -74,32 +91,6 @@ public class ChordsStage extends Activity {
         parts.add(p);
 
         return parts;
-    }
-
-    private class TouchListener implements View.OnTouchListener {
-
-        private ScaleGestureDetector d;
-
-        private TouchListener(Context context) {
-            d = new ScaleGestureDetector(context, new Scaler());
-        }
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            return d.onTouchEvent(event);
-        }
-
-        private class Scaler extends ScaleGestureDetector.SimpleOnScaleGestureListener {
-
-            @Override
-            public boolean onScale(ScaleGestureDetector detector) {
-                songView.setScale(detector.getScaleFactor());
-                songView.invalidate();
-                return true;
-            }
-
-        }
-
     }
 
 }

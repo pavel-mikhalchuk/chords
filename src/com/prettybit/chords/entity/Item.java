@@ -57,6 +57,14 @@ public abstract class Item {
         onMeasure(size);
     }
 
+    protected boolean contains(int x, int y) {
+        return false;
+    }
+
+    protected void select() {}
+
+    protected void deselect() {}
+
     public abstract void onMeasure(int size);
 
     public abstract void draw(Canvas canvas, Caret caret);
