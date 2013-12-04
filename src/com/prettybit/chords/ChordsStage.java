@@ -1,96 +1,77 @@
 package com.prettybit.chords;
 
 import android.app.Activity;
-import android.graphics.Point;
+import android.inputmethodservice.Keyboard;
+import android.inputmethodservice.KeyboardView;
 import android.os.Bundle;
-import android.widget.RelativeLayout;
-import com.prettybit.chords.entity.Bar;
+import android.util.Log;
 import com.prettybit.chords.entity.Chor;
-import com.prettybit.chords.entity.Keyboard;
-import com.prettybit.chords.entity.Line;
-import com.prettybit.chords.entity.Repeat;
 import com.prettybit.chords.entity.SongPart;
 import com.prettybit.chords.entity.SongView;
-import com.prettybit.chords.entity.Tab;
-import com.prettybit.chords.entity.Title;
-import com.prettybit.chords.entity.Verse;
-
-import java.util.LinkedList;
-import java.util.List;
-
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class ChordsStage extends Activity {
-
-    private SongView songView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chords_stage);
 
-        RelativeLayout stage = (RelativeLayout) findViewById(R.id.chords_stage);
-
-        songView = new SongView(this);
-
-        Point display = new Point();
-        getWindowManager().getDefaultDisplay().getSize(display);
-
+        final SongView song = (SongView) findViewById(R.id.song);
         SongPart part = new SongPart(20);
-        part.addItem(new Chor("Y"));
-        part.init(display.x, display.y);
-        songView.addPart(part);
+        part.init(100, 100);
+        song.addPart(part);
 
-//        songView.addParts(getParts());
+        KeyboardView keyboard = (KeyboardView) findViewById(R.id.keyboard);
 
-        RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
-        p.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        keyboard.setOnKeyboardActionListener(new KeyboardView.OnKeyboardActionListener() {
+            @Override
+            public void onPress(int primaryCode) {
+                Log.i(ChordsStage.class.toString(), "Press " + primaryCode + "!!!");
+            }
 
-        stage.addView(songView, p);
+            @Override
+            public void onRelease(int primaryCode) {
+                Log.i(ChordsStage.class.toString(), "Release " + primaryCode + "!!!");
 
-        p = new RelativeLayout.LayoutParams(MATCH_PARENT, 100);
-        p.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                Chor c = new Chor(String.valueOf((char) primaryCode));
+                c.onMeasure(20);
 
-        stage.addView(new Keyboard(this, songView), p);
-    }
+                song.getActive().addItem(c);
 
-    private List<SongPart> getParts() {
-        LinkedList<SongPart> parts = new LinkedList<SongPart>();
+                song.invalidate();
+            }
 
-        SongPart p = new SongPart(17);
-        p.addItem(new Title("Shadows of the Night"));
+            @Override
+            public void onKey(int primaryCode, int[] keyCodes) {
+                Log.i(ChordsStage.class.toString(), "Key " + primaryCode + "_" + keyCodes + "!!!");
+            }
 
-        parts.add(p);
+            @Override
+            public void onText(CharSequence text) {
+                Log.i(ChordsStage.class.toString(), "Text " + text + "!!!");
+            }
 
-        p = new SongPart(40);
-        p.addItem(new Line("Intro: Voc = "));
-        p.addItem(new Chor("E", true));
-        p.addItem(new Bar());
-        p.addItem(new Chor("A", true));
-        p.addItem(new Repeat());
+            @Override
+            public void swipeLeft() {
+                Log.i(ChordsStage.class.toString(), "Swipe Left!!!");
+            }
 
-        parts.add(p);
+            @Override
+            public void swipeRight() {
+                Log.i(ChordsStage.class.toString(), "Swipe Right!!!");
+            }
 
-        p = new SongPart(40);
-        p.addItem(new Verse(1));
-        p.addItem(new Chor("E", true));
-        p.addItem(new Bar());
-        p.addItem(new Chor("A", true));
-        p.addItem(new Repeat());
-        p.addItem(new Chor("C"));
-        p.addItem(new Bar());
-        p.addItem(new Chor("B", true));
-        p.addItem(new Bar());
-        p.addItem(new Chor("F"));
-        p.addItem(new Chor("G"));
-        p.addItem(new Bar());
-        p.addItem(new Tab());
-        p.addItem(new Bar());
+            @Override
+            public void swipeDown() {
+                Log.i(ChordsStage.class.toString(), "Swipe Down!!!");
+            }
 
-        parts.add(p);
-
-        return parts;
+            @Override
+            public void swipeUp() {
+                Log.i(ChordsStage.class.toString(), "Swipe Up!!!");
+            }
+        });
+        keyboard.setKeyboard(new Keyboard(this, R.xml.keyboard));
     }
 
 }

@@ -3,6 +3,7 @@ package com.prettybit.chords.entity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -22,8 +23,8 @@ public class SongView extends View {
 
     private Item activeItem;
 
-    public SongView(Context context) {
-        super(context);
+    public SongView(Context context, AttributeSet attrs) {
+        super(context, attrs);
         setBackgroundColor(Color.CYAN);
 
         setOnTouchListener(new TouchListener(context));
