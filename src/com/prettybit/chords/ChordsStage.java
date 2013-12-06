@@ -1,10 +1,7 @@
 package com.prettybit.chords;
 
 import android.app.Activity;
-import android.inputmethodservice.Keyboard;
-import android.inputmethodservice.KeyboardView;
 import android.os.Bundle;
-import android.util.Log;
 import com.prettybit.chords.entity.Chor;
 import com.prettybit.chords.entity.SongPart;
 import com.prettybit.chords.entity.SongView;
@@ -17,11 +14,13 @@ public class ChordsStage extends Activity {
         setContentView(R.layout.chords_stage);
 
         final SongView song = (SongView) findViewById(R.id.song);
-        SongPart part = new SongPart(20);
-        part.init(100, 100);
+        SongPart part = new SongPart(60);
+        part.addItem(new Chor("B"));
+        part.addItem(new Chor("A"));
+        part.addItem(new Chor("B"));
         song.addPart(part);
 
-        KeyboardView keyboard = (KeyboardView) findViewById(R.id.keyboard);
+/*        KeyboardView keyboard = (KeyboardView) findViewById(R.id.keyboard);
 
         keyboard.setOnKeyboardActionListener(new KeyboardView.OnKeyboardActionListener() {
             @Override
@@ -71,7 +70,7 @@ public class ChordsStage extends Activity {
                 Log.i(ChordsStage.class.toString(), "Swipe Up!!!");
             }
         });
-        keyboard.setKeyboard(new Keyboard(this, R.xml.keyboard));
+        keyboard.setKeyboard(new Keyboard(this, R.xml.keyboard));*/
     }
 
 }

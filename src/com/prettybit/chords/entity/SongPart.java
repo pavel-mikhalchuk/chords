@@ -53,11 +53,4 @@ public class SongPart {
         items.draw(canvas, new Caret(size));
     }
 
-    public Item contains(int x, int y) {
-        for (Item item : items) {
-            if (item.contains(x, y)) return item;
-        }
-        return null;
-    }
-
 }
