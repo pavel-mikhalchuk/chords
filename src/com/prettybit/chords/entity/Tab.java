@@ -20,7 +20,7 @@ public class Tab extends Item {
     }
 
     @Override
-    public void onMeasure(int size) {
+    public void onMeasure(float size) {
         setHeight(size);
         setWidth(12 * 10);
     }

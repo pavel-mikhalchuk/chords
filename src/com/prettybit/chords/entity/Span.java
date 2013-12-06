@@ -23,7 +23,7 @@ public class Span extends Item {
     }
 
     @Override
-    public void onMeasure(int size) {
+    public void onMeasure(float size) {
         for (Item item : items) {
             item.measure(size);
             widthPlus(item.width());

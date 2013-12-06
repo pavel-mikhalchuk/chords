@@ -5,52 +5,24 @@ import android.graphics.Canvas;
 /**
  * @author Pavel Mikhalchuk
  */
-public class SongPart {
-
-    private int screenWidth;
-    private int screenHeight;
-
-    private int size;
+public class SongPart extends Item {
 
     private Items items = new Items();
 
-    public SongPart(int size) {
-        this.size = size;
-    }
-
-    public void init(int screenWidth, int screenHeight) {
-        this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
+    @Override
+    public void onMeasure(float size) {
         items.measure(size);
+        setHeight(items.height());
+        setWidth(items.width());
     }
 
-    public int screenWidth() {
-        return screenWidth;
-    }
-
-    public int screenHeight() {
-        return screenHeight;
+    @Override
+    public void draw(Canvas canvas, Caret caret) {
+        items.draw(canvas, caret);
     }
 
     public void addItem(Item item) {
-        item.setPart(this);
         items.add(item);
-    }
-
-    public Items getItems() {
-        return items;
-    }
-
-    public int size() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
-
-    public void draw(Canvas canvas) {
-        items.draw(canvas, new Caret(size));
     }
 
 }

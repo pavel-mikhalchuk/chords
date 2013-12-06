@@ -7,57 +7,44 @@ import android.graphics.Canvas;
  */
 public abstract class Item {
 
-    private int width;
-    private int height;
-
-    private SongPart parent;
-
-    protected void setPart(SongPart parent) {
-        this.parent = parent;
-    }
+    private float width;
+    private float height;
 
     public void drawln(Canvas canvas, Caret caret) {
-        draw(canvas, caret); caret.newLine();
+        draw(canvas, caret);
+        caret.newLine();
     }
 
-    public int width() {
+    public float width() {
         return width;
     }
 
-    protected void setWidth(int width) {
+    protected void setWidth(float width) {
         this.width = width;
     }
 
-    protected void widthPlus(int width) {
+    protected void widthPlus(float width) {
         this.width += width;
     }
 
-    public int height() {
+    public float height() {
         return height;
     }
 
-    protected void setHeight(int height) {
+    protected void setHeight(float height) {
         this.height = height;
     }
 
-    protected void heightPlus(int height) {
+    protected void heightPlus(float height) {
         this.height += height;
     }
 
-    public int screenWidth() {
-        return parent.screenWidth();
-    }
-
-    public int screenHeight() {
-        return parent.screenHeight();
-    }
-
-    protected void measure(int size) {
+    protected void measure(float size) {
         width = height = 0;
         onMeasure(size);
     }
 
-    public abstract void onMeasure(int size);
+    public abstract void onMeasure(float size);
 
     public abstract void draw(Canvas canvas, Caret caret);
 

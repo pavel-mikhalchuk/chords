@@ -9,8 +9,6 @@ import android.graphics.Paint;
  */
 public class Repeat extends Item {
 
-    float scale = 1;
-
     private Paint brush = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint backGround = new Paint();
 
@@ -22,7 +20,7 @@ public class Repeat extends Item {
     }
 
     @Override
-    public void onMeasure(int size) {
+    public void onMeasure(float size) {
         setWidth(8);
         setHeight(size);
     }

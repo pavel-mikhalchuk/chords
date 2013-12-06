@@ -23,7 +23,7 @@ public class Column extends Item {
     }
 
     @Override
-    public void onMeasure(int size) {
+    public void onMeasure(float size) {
         for (Item item : items) {
             item.measure(size / items.size());
             setWidth(Math.max(width(), item.width()));

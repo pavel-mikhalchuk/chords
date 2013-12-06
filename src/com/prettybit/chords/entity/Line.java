@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 
 /**
  * @author Pavel Mikhalchuk
@@ -11,7 +12,7 @@ import android.graphics.Rect;
 public class Line extends Item {
 
     private String line;
-    private Rect lRect;
+    private RectF lRect;
 
     private Paint text = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint backGround = new Paint();
@@ -24,7 +25,7 @@ public class Line extends Item {
     }
 
     @Override
-    public void onMeasure(int size) {
+    public void onMeasure(float size) {
         setHeight(size);
 
         text.setTextSize(height());
@@ -34,7 +35,7 @@ public class Line extends Item {
 
         setWidth((int) text.measureText(line));
 
-        lRect = new Rect((width() - bounds.width()) / 2, (height() - bounds.height()) / 2, bounds.width(), bounds.height());
+        lRect = new RectF((width() - bounds.width()) / 2, (height() - bounds.height()) / 2, bounds.width(), bounds.height());
     }
 
     @Override

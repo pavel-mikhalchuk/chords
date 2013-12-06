@@ -14,7 +14,7 @@ public class ChordsStage extends Activity {
         setContentView(R.layout.chords_stage);
 
         final SongView song = (SongView) findViewById(R.id.song);
-        SongPart part = new SongPart(60);
+        SongPart part = new SongPart();
         part.addItem(new Chor("B"));
         part.addItem(new Chor("A"));
         part.addItem(new Chor("B"));

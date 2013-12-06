@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 
 import java.math.BigInteger;
@@ -15,7 +16,7 @@ public class Chor extends Item {
 
     private String c;
     private boolean flat;
-    private Rect cRect;
+    private RectF cRect;
 
     private Paint text = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint backGround = new Paint();
@@ -36,17 +37,17 @@ public class Chor extends Item {
     }
 
     @Override
-    public void onMeasure(int size) {
+    public void onMeasure(float size) {
         setHeight(size);
 
         text.setTextSize(height());
 
-        setWidth((int) text.measureText(c));
+        setWidth(text.measureText(c));
 
         Rect bounds = new Rect();
         text.getTextBounds(c, 0, c.length(), bounds);
 
-        cRect = new Rect((width() - bounds.width()) / 2, (height() - bounds.height()) / 2, bounds.width(), bounds.height());
+        cRect = new RectF((width() - bounds.width()) / 2, (height() - bounds.height()) / 2, bounds.width(), bounds.height());
     }
 
     @Override

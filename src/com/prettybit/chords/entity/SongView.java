@@ -10,10 +10,8 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Pavel Mikhalchuk
@@ -40,7 +38,7 @@ public class SongView extends View {
         int screenHeight = MeasureSpec.getSize(heightMeasureSpec);
 
         for (SongPart part : parts) {
-            part.init(screenWidth, screenHeight);
+            part.measure(60);
         }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
@@ -52,18 +50,22 @@ public class SongView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         //test grid
-        int i = 0;
+        RectF partRect = new RectF(0, 0, 0, 0);
         grid.draw(canvas);
         //test grid
 
         canvas.scale(scale, scale);
 
         for (SongPart part : parts) {
-            part.draw(canvas);
-            canvas.translate(0, part.size());
+            part.draw(canvas, new Caret());
+            canvas.translate(0, part.height());
 
             //test grid
-            grid.put(new RectF(0, part.size() * i++, part.screenWidth(), part.size()), part);
+            partRect.right = part.width();
+            partRect.bottom = part.height();
+            grid.bind(partRect, part);
+
+            partRect.top = part.height();
             //test grid
         }
     }
@@ -87,7 +89,7 @@ public class SongView extends View {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             if (event.getActionMasked() == MotionEvent.ACTION_UP) {
-                grid.findCell(event.getX(), event.getY())
+                grid.findCell(event.getX(), event.getY()).toggleActive();
             }
 
             invalidate();
@@ -111,69 +113,59 @@ public class SongView extends View {
     //test grid
     private static class Grid {
 
-        private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG); {paint.setStyle(Paint.Style.STROKE); paint.setColor(Color.BLACK);}
+        private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG); {
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setColor(Color.BLACK);
+        }
 
-        private Cell[][] grid;
+        private Cell[][] cells;
         private int rows;
         private int columns;
-        private float cellXSize;
-        private float cellYSize;
-
-        private Map<Cell, List<SongPart>> elements = new HashMap<Cell, List<SongPart>>();
+        private float cellXSide;
+        private float cellYSide;
 
         public Grid(float width, float height, int rows, int columns) {
             this.rows = rows;
             this.columns = columns;
-            cellXSize = width / columns;
-            cellYSize = height / rows;
+            cellXSide = width / columns;
+            cellYSide = height / rows;
             initCells();
         }
 
         public void draw(Canvas canvas) {
             for (int r = 0; r < rows; r++) {
                 for (int c = 0; c < columns; c++) {
-                    grid[r][c].draw(canvas, paint);
+                    cells[r][c].draw(canvas, paint);
                 }
             }
         }
 
-        public void put(RectF rect, SongPart part) {
+        public void bind(RectF rect, Item item) {
             for (int i = rowsFormula(rect.top); i <= rowsFormula(rect.bottom); i++) {
-                for (int j = columnsFormula(rect.left); i <= columnsFormula(rect.right); i++) {
-                    put(grid[i][j], part);
+                for (int j = columnsFormula(rect.left); j <= columnsFormula(rect.right); j++) {
+                    cells[i][j].bind(item);
                 }
             }
-        }
-
-        public void put(Cell cell, SongPart part) {
-            if (!elements.containsKey(cell)) {
-                elements.put(cell, new LinkedList<SongPart>());
-            }
-            elements.get(cell).add(part);
         }
 
         public Cell findCell(float x, float y) {
-            return grid[rowsFormula(y)][columnsFormula(x)];
+            return cells[rowsFormula(y)][columnsFormula(x)];
         }
 
-        private int rowsFormula(float f) {return formula(f, rows);}
+        private int rowsFormula(float f) {return Math.min(rows - 1, (int) (f / cellYSide));}
 
-        private int columnsFormula(float f) {return formula(f, columns);}
-
-        private int formula(float f, int n) {
-            return (int) f / n + (f % n > 0 ? 1 : 0);
-        }
+        private int columnsFormula(float f) {return Math.min(columns - 1, (int) (f / cellXSide));}
 
         private void initCells() {
             int x = 0, y = 0;
 
-            grid = new Cell[rows][columns];
+            cells = new Cell[rows][columns];
             for (int r = 0; r < rows; r++) {
                 for (int c = 0; c < columns; c++) {
-                    grid[r][c] = new Cell(new RectF(x, y, x + cellXSize, y + cellYSize), r, c);
-                    x += cellXSize;
+                    cells[r][c] = new Cell(new RectF(x, y, x + cellXSide, y + cellYSide), r, c);
+                    x += cellXSide;
                 }
-                y += cellYSize;
+                y += cellYSide;
                 x = 0;
             }
         }
@@ -186,6 +178,7 @@ public class SongView extends View {
         private int row;
         private int column;
         private boolean active;
+        private List<Item> bindedItems = new LinkedList<Item>();
 
         public Cell(RectF rect, int row, int column) {
             r = rect;
@@ -193,23 +186,39 @@ public class SongView extends View {
             this.column = column;
         }
 
-        public void draw(Canvas canvas, Paint paint) {
-            canvas.drawRect(r, paint);
-        }
-
-        private RectF rect() {
+        public RectF rect() {
             return r;
         }
 
-        private int row() {
+        public int row() {
             return row;
         }
 
-        private int column() {
+        public int column() {
             return column;
         }
 
-        public }
+        public void bind(Item item) {
+            bindedItems.add(item);
+        }
+
+        public void draw(Canvas canvas, Paint paint) {
+            if (active) {
+                paint.setColor(Color.YELLOW);
+                paint.setStyle(Paint.Style.FILL);
+            }
+            canvas.drawRect(r, paint);
+            if (active) {
+                paint.setColor(Color.BLACK);
+                paint.setStyle(Paint.Style.STROKE);
+            }
+        }
+
+        public void toggleActive() {
+            active = !active;
+        }
+
+    }
     //test grid
 
 }

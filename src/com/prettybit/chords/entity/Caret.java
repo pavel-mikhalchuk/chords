@@ -5,62 +5,66 @@ package com.prettybit.chords.entity;
  */
 public class Caret {
 
-    private int size;
-    private int start = 0;
-    private int x = 0;
-    private int y = 0;
+    private float size;
+    private float start = 0;
+    private float x = 0;
+    private float y = 0;
 
     private Caret parent;
 
-    public Caret(int size) {
+    public Caret() {
+        this(0);
+    }
+
+    public Caret(float size) {
         this(0, 0, size, null);
     }
 
-    public Caret(int x, int y, int size, Caret parent) {
+    public Caret(float x, float y, float size, Caret parent) {
         this.start = this.x = x;
         this.y = y;
         this.size = size;
         this.parent = parent;
     }
 
-    public int x() {
+    public float x() {
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(float x) {
         this.x = x;
     }
 
-    public int y() {
+    public float y() {
         return y;
     }
 
-    public void setY(int y) {
+    public void setY(float y) {
         this.y = y;
     }
 
-    public void set(int x, int y) {
+    public void set(float x, float y) {
         setX(x);
         setY(y);
     }
 
-    public int size() {
+    public float size() {
         return size;
     }
 
-    public void setSize(int size) {
+    public void setSize(float size) {
         this.size = size;
     }
 
-    public int width() {
+    public float width() {
         return x - start;
     }
 
-    public Caret split(int rowSize) {
+    public Caret split(float rowSize) {
         return new Caret(x, y, rowSize, this);
     }
 
-    public void move(int distance) {
+    public void move(float distance) {
         setX(x + distance);
     }
 

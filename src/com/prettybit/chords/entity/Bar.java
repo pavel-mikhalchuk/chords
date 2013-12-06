@@ -20,7 +20,7 @@ public class Bar extends Item {
     }
 
     @Override
-    public void onMeasure(int size) {
+    public void onMeasure(float size) {
         setWidth(7);
         setHeight(size);
     }
