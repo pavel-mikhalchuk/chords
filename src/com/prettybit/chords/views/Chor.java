@@ -8,11 +8,8 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.view.MotionEvent;
 import android.view.View;
-import com.prettybit.chords.ChordsStage2;
 
 import java.util.Random;
-
-import static android.content.Context.MODE_PRIVATE;
 
 /**
  * @author Pavel Mikhalchuk
@@ -20,7 +17,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class Chor extends View {
 
     private String c;
-    private int size = 60;
+    private float size = 60;
 
     private Paint p = initPaint();
 
@@ -41,26 +38,20 @@ public class Chor extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        float scale = getContext().getSharedPreferences(ChordsStage2.STAGE_PREFS, MODE_PRIVATE).getFloat(ChordsStage2.SCALE_PREF, 1);
-
-        size *= scale;
         p.setTextSize(size);
 
-        setMeasuredDimension((int) p.measureText(c), size);
+        setMeasuredDimension((int) p.measureText(c), (int) size);
     }
 
     @Override
     public void onDraw(Canvas canvas) {
-//        float scale = getContext().getSharedPreferences(ChordsStage2.STAGE_PREFS, MODE_PRIVATE).getFloat(ChordsStage2.SCALE_PREF, 1);
-//        canvas.scale(scale, scale);
-
         float d = size - p.getFontMetrics().descent; //compensate descent
-        int av = (size - charHeight()) / 2; //align vertically
+        float av = (size - charHeight()) / 2; //align vertically
 
         canvas.drawText(c, 0, d + av, p);
     }
 
-    private int charHeight() {
+    private float charHeight() {
         Rect bounds = new Rect();
         p.getTextBounds(c, 0, c.length(), bounds);
         return bounds.height();
